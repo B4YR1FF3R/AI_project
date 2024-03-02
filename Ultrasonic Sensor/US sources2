@@ -1,0 +1,39 @@
+// โค้ดเซ็นเซอร์วัดระยะทาง Ultrasonic Module HC-SR04 2021 UART IIC 3.3-5V (ESP32)
+// ทำตามที่เขาบอก https://www.cybertice.com/article/587/%E0%B8%AA%E0%B8%AD%E0%B8%99%E0%B9%83%E0%B8%8A%E0%B9%89%E0%B8%87%E0%B8%B2%E0%B8%99-esp32-%E0%B9%80%E0%B8%8B%E0%B9%87%E0%B8%99%E0%B9%80%E0%B8%8B%E0%B8%AD%E0%B8%A3%E0%B9%8C%E0%B8%A7%E0%B8%B1%E0%B8%94%E0%B8%A3%E0%B8%B0%E0%B8%A2%E0%B8%B0%E0%B8%97%E0%B8%B2%E0%B8%87-ultrasonic-module-hc-sr04-2021-uart-iic-3-3-5v
+
+const int pingPin = 5;
+int inPin = 18;
+ 
+void setup() {
+Serial.begin(9600);
+}
+ 
+void loop()
+{
+long duration, cm;
+ 
+pinMode(pingPin, OUTPUT);
+ 
+digitalWrite(pingPin, LOW);
+delayMicroseconds(2);
+digitalWrite(pingPin, HIGH);
+delayMicroseconds(5);
+digitalWrite(pingPin, LOW);
+pinMode(inPin, INPUT);
+duration = pulseIn(inPin, HIGH);
+ 
+cm = microsecondsToCentimeters(duration);
+ 
+Serial.print(cm);
+Serial.print("cm");
+Serial.println();
+delay(100);
+}
+ 
+long microsecondsToCentimeters(long microseconds)
+{
+// The speed of sound is 340 m/s or 29 microseconds per centimeter.
+// The ping travels out and back, so to find the distance of the
+// object we take half of the distance travelled.
+return microseconds / 29 / 2;
+}
