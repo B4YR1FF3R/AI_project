@@ -1,0 +1,81 @@
+// Motor control pins
+const int motor1PWM = 5;  // PWM speed control for motor 1
+const int motor1Dir1 = 18;  // Direction control 1 for motor 1
+const int motor1Dir2 = 19;  // Direction control 2 for motor 1
+
+const int motor2PWM = 23;  // PWM speed control for motor 2
+const int motor2Dir1 = 21;  // Direction control 1 for motor 2
+const int motor2Dir2 = 22;  // Direction control 2 for motor 2
+
+// IR sensor pins
+const int irSensorLeft = 14;  // Connect the left IR sensor to pin 14
+const int irSensorRight = 27;  // Connect the right IR sensor to pin 27
+
+void setup() {
+  Serial.begin(9600);
+
+  pinMode(motor1PWM, OUTPUT);
+  pinMode(motor1Dir1, OUTPUT);
+  pinMode(motor1Dir2, OUTPUT);
+
+  pinMode(motor2PWM, OUTPUT);
+  pinMode(motor2Dir1, OUTPUT);
+  pinMode(motor2Dir2, OUTPUT);
+
+  pinMode(irSensorLeft, INPUT);
+  pinMode(irSensorRight, INPUT);
+}
+
+void loop() {
+  int leftSensorValue = digitalRead(irSensorLeft);
+  int rightSensorValue = digitalRead(irSensorRight);
+
+  if (leftSensorValue == LOW && rightSensorValue == LOW) {
+    // Both sensors off the line, stop
+    stopMotors();
+  } else if (leftSensorValue == LOW && rightSensorValue == HIGH) {
+    // Left sensor off the line, turn right
+    turnRight();
+  } else if (leftSensorValue == HIGH && rightSensorValue == LOW) {
+    // Right sensor off the line, turn left
+    turnLeft();
+  } else {
+    // Both sensors on the line, move forward
+    moveForward();
+  }
+}
+
+void moveForward() {
+  digitalWrite(motor1Dir1, HIGH);
+  digitalWrite(motor1Dir2, LOW);
+  analogWrite(motor1PWM, 200);
+
+  digitalWrite(motor2Dir1, HIGH);
+  digitalWrite(motor2Dir2, LOW);
+  analogWrite(motor2PWM, 200);
+}
+
+void turnLeft() {
+  digitalWrite(motor1Dir1, HIGH);
+  digitalWrite(motor1Dir2, LOW);
+  analogWrite(motor1PWM, 100);
+
+  digitalWrite(motor2Dir1, LOW);
+  digitalWrite(motor2Dir2, HIGH);
+  analogWrite(motor2PWM, 100);
+}
+
+void turnRight() {
+  digitalWrite(motor1Dir1, LOW);
+  digitalWrite(motor1Dir2, HIGH);
+  analogWrite(motor1PWM, 100);
+
+  digitalWrite(motor2Dir1, HIGH);
+  digitalWrite(motor2Dir2, LOW);
+  analogWrite(motor2PWM, 100);
+}
+
+void stopMotors() {
+  digitalWrite(motor1PWM, LOW);
+  digitalWrite(motor2PWM, LOW);
+}
