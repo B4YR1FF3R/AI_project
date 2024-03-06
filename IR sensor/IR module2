@@ -1,0 +1,16 @@
+// โค้ดตรวจเส้นขาวดำเฉยๆ
+
+int sensor = 2;
+
+void setup() {
+Serial.begin(9600);
+}
+
+void loop() {
+int val = digitalRead(sensor);
+
+Serial.print ("ค่าสัญญาณดิจิตอล : ");
+Serial.println(val);
+
+delay(100);
+}
